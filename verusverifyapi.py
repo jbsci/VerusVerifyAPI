@@ -2,12 +2,12 @@
 
 '''
 Basic Functionality:
-    curl -H "Content-Type:application/json" -X POST -d {"message" : "This is a test message", "signer" : "jbsci@", 
-    "signature" : "Af+4EQrrrABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM"}' localhost:5000/verifymessage
+    curl -H "Content-Type : application/json" -X POST -d '{"message" : "This is the VerusVerifyAPI", "signer" : "jbsci@", "signature" : "AXFhFAABQR9zKHrqydslEYVBAJnFh+7SCL5M1Df6as3zIJXjFUaAnRnYmg2EiQEiQcv/JN6OIBKgJZpXsWwA4c0pd87wdNwJ"}' https://<host>:<port>/verify
 
-Requires configuraiton under the config heading for RPC communication and API port. Requires uWSGI for hosting.
 
-Written 2020 by jbsci <j@jbsci.dev>
+Requires configuraiton under the config heading for RPC communication.
+
+Written 2021 by jbsci <j@jbsci.dev>
 '''
 
 #-# Imports #-#
