@@ -1,12 +1,12 @@
 # VerusVerifyAPI
 
-Simple API to get Verus ID information + verify hashes and messages
+Simple API to get Verus ID information + verify hashes and messages. Based on WSGI.
 
 ### Dependencies
 
 0. Python 3
-1. requests
-2. WSGI server
+1. json
+2. requests
 
 ### Setup
 
