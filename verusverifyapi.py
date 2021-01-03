@@ -4,7 +4,6 @@
 Basic Functionality:
     curl -H "Content-Type : application/json" -X POST -d '{"message" : "This is the VerusVerifyAPI", "signer" : "jbsci@", "signature" : "AXFhFAABQR9zKHrqydslEYVBAJnFh+7SCL5M1Df6as3zIJXjFUaAnRnYmg2EiQEiQcv/JN6OIBKgJZpXsWwA4c0pd87wdNwJ"}' https://<host>:<port>/verify
 
-
 Requires configuraiton under the config heading for RPC communication.
 
 Written 2021 by jbsci <j@jbsci.dev>
@@ -107,7 +106,7 @@ def verifyparser(payload):
     return result
 
 def application(environ, start_response):
-    if environ["REQUEST_METHOD"] == 'POST':
+    if environ["REQUEST_METHOD"] == "POST":
         headers =   [('content-type', 'application/json')]
         try:
             request_body_size = int(environ.get('CONTENT_LENGTH', 0))
@@ -115,7 +114,12 @@ def application(environ, start_response):
             request_body_size=0
         request_body = environ['wsgi.input'].read(request_body_size)
         path = environ['PATH_INFO'].split('/')[1]
-        data = json.loads(request_body)
+        try:
+            data = json.loads(request_body)
+        except:
+            start_response('406 Not Acceptable', headers)
+            result = {'error' : 0, 'error_detail' : "Bad json"}
+            return [json.dumps(result).encode('utf-8')]
         if path == "verify":
             result = verifyparser(data)
         elif path == "id":
@@ -127,6 +131,7 @@ def application(environ, start_response):
         start_response('200 OK', headers)
         return [json.dumps(result).encode('utf-8')]
     else:
+        headers = [('content-type', 'text/html')]
         start_response('406 Not Acceptable', headers)
         result = {'error' : 0, "error_detail" : "Invalid Request"}
         return [json.dumps(result).encode('utf-8')]
