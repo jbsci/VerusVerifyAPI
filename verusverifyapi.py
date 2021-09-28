@@ -18,10 +18,10 @@ from requests.auth import HTTPBasicAuth
 
 #--# Config #--#
 
-#Verus RPC
+#Verus RPC information
 rpchost='http://localhost'
 rpcport=27486
-rpcuser='verus'
+rpcuser='<rpcuser>'
 rpcpass='<rpcpassword>'
 
 #---# Functions #---#
@@ -62,6 +62,9 @@ def verusidentity(identity):
 #----# API #----#
 
 def verifyhash(payload):
+    '''
+    Verifies hash
+    '''
     result = verusverify(payload["hash"], payload["signer"], payload["signature"], 'verifyhash', rpcid='verifyhash')['result']
     if result:
         return {"valid" : "true"}
@@ -69,6 +72,9 @@ def verifyhash(payload):
         return {"valid" : "false"}
 
 def verifymessage(payload):
+    '''
+    Verifies message
+    '''
     result =  verusverify(payload['message'], payload['signer'], payload['signature'], 'verifymessage', rpcid='verifymessage')['result']
     if result:
         return {"valid" : "true"}
@@ -76,6 +82,9 @@ def verifymessage(payload):
         return {"valid" : "false"}
 
 def getid(payload):
+    '''
+    Retrieve information for specified ID
+    '''
     if "id" not in payload.keys():
         return {"error" : 4, "error_detail" : "1 parameter given, but no ID specified"}
     idresult = verusidentity(payload["id"])
@@ -106,6 +115,9 @@ def verifyparser(payload):
     return result
 
 def application(environ, start_response):
+    '''
+    Main application
+    '''
     if environ["REQUEST_METHOD"] == "POST":
         headers =   [('content-type', 'application/json')]
         try:
@@ -117,7 +129,7 @@ def application(environ, start_response):
         try:
             data = json.loads(request_body)
         except:
-            start_response('406 Not Acceptable', headers)
+            start_response('400 Bad Request', headers)
             result = {'error' : 0, 'error_detail' : "Bad json"}
             return [json.dumps(result).encode('utf-8')]
         if path == "verify":
@@ -125,13 +137,13 @@ def application(environ, start_response):
         elif path == "id":
             result = getid(data)
         else:
-            start_response('406 Not Acceptable', headers)
+            start_response('400 Bad Request', headers)
             result = {'error' : 0, "error_detail" : "Invalid request"}
             return [json.dumps(result).encode('utf-8')]
         start_response('200 OK', headers)
         return [json.dumps(result).encode('utf-8')]
     else:
         headers = [('content-type', 'text/html')]
-        start_response('406 Not Acceptable', headers)
+        start_response('400 Bad Request', headers)
         result = {'error' : 0, "error_detail" : "Invalid Request"}
         return [json.dumps(result).encode('utf-8')]
