@@ -85,11 +85,11 @@ def getid(payload):
     '''
     Retrieve information for specified ID
     '''
-    if "id" not in payload.keys():
-        return {"error" : 4, "error_detail" : "1 parameter given, but no ID specified"}
-    idresult = verusidentity(payload["id"])
+    if "identity" not in payload.keys():
+        return {"error" : 4, "error_detail" : "1 parameter given, but no identity specified"}
+    idresult = verusidentity(payload["identity"])
     if idresult["result"] is None:
-        return {"error" : 5, "error_detail" : "ID not found"}
+        return {"error" : 5, "error_detail" : "Identity not found"}
     else:
         return idresult["result"]
 
@@ -134,7 +134,7 @@ def application(environ, start_response):
             return [json.dumps(result).encode('utf-8')]
         if path == "verify":
             result = verifyparser(data)
-        elif path == "id":
+        elif path == "getidentity":
             result = getid(data)
         else:
             start_response('400 Bad Request', headers)
