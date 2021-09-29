@@ -38,7 +38,7 @@ def verusquery(method, params, rpcid=" "):
 
 def verusverify(thing_to_verify, signer, signature, method, rpcid):
     '''
-    Uses given rpc method to perform verification of a File (verifyfile), Filehash (verifyhash),
+    Uses given RPC method to perform verification of a File (verifyfile), Filehash (verifyhash),
     or message (verifymessage)
     '''
     result = verusquery(method, [signer, signature, thing_to_verify], rpcid=rpcid)
@@ -58,6 +58,12 @@ def verusidentity(identity):
     else:
         return result
 
+def verusvdxfid(vdxfid):
+    '''
+    Queries RPC for vdxfid information
+    '''
+    result = verusquery("getvdxfid", [vdxfid], rpcid="getvdxfid")
+    return result
 
 #----# API #----#
 
@@ -81,7 +87,7 @@ def verifymessage(payload):
     else:
         return {"valid" : "false"}
 
-def getid(payload):
+def getidentity(payload):
     '''
     Retrieve information for specified ID
     '''
@@ -92,6 +98,19 @@ def getid(payload):
         return {"error" : 5, "error_detail" : "Identity not found"}
     else:
         return idresult["result"]
+
+def getvdxfid(payload):
+    '''
+    Retrieve information for vdxfid
+    '''
+    if "vdxfid" not in payload.keys():
+        return {"error" : 4, "error_detail" : "1 parameter given, but no vdxfid specified"}
+    vdxfidresult = verusvdfxid(payload["vdxfid"])
+    if vdxfidresult["result"] is None:
+        return {"error" : 5, "error_detail" : "vdxfid not found"}
+    else:
+        return vdxfidresult["result"]
+
 
 def verifyparser(payload):
     inparams = list(payload.keys())
@@ -135,7 +154,9 @@ def application(environ, start_response):
         if path == "verify":
             result = verifyparser(data)
         elif path == "getidentity":
-            result = getid(data)
+            result = getidentity(data)
+        elif path == "getvdxfid":
+            result = getvdxfid(data)
         else:
             start_response('400 Bad Request', headers)
             result = {'error' : 0, "error_detail" : "Invalid request"}
