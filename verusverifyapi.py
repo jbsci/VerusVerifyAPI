@@ -103,9 +103,9 @@ def getvdxfid(payload):
     '''
     Retrieve information for vdxfid
     '''
-    if "vdxfid" not in payload.keys():
-        return {"error" : 4, "error_detail" : "1 parameter given, but no vdxfid specified"}
-    vdxfidresult = verusvdfxid(payload["vdxfid"])
+    if "vdxfuri" not in payload.keys():
+        return {"error" : 4, "error_detail" : "1 parameter given, but no vdxfuri specified"}
+    vdxfidresult = verusvdxfid(payload["vdxfuri"])
     if vdxfidresult["result"] is None:
         return {"error" : 5, "error_detail" : "vdxfid not found"}
     else:
