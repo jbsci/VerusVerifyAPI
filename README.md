@@ -33,7 +33,11 @@ route: /verify
 in: {"message" : <message>, "signer" : <signer>, "signature" : <signature>} or {"hash" : <hash>, "signer" : <signer>, "signature" : <signature>} 
 out: { valid : true|false }
 
-route: /id
-In: {"id" : <id>}
+route: /getidenity
+In: {"identity" : <id>}
 out: Identity information
+
+route:/getvdxfid
+In: {"vdxfuri" : <vdxfid>}
+Out: VDXFID information
 ```
